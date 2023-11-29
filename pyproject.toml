@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "insta485"
-version = "1.0.0"
+version = "0.1.0"
 dependencies = [
     "arrow",
     "bs4",
@@ -21,6 +21,3 @@ requires-python = ">=3.10"
 
 [tool.setuptools]
 packages = ["insta485"]
-
-[tool.pylint."messages control"]
-disable = ["cyclic-import"]
