@@ -1,4 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-Hello world!
+<head>
+    <title>insta485</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+<div class="column-container" style="max-width: 610px; margin: auto;">
+    <!-- Header Section  -->
+    <div class="row-container" style="width: 610px">
+        <a href="/" class="child">Insta485</a>
+        <div class="child" style="text-align: end">
+            <a href="/explore/">explore</a> |
+            <a href="/users/{{ logname }}/">{{ logname }}</a>
+        </div>
+    </div>
+    <hr>
+    <!-- Body Section -->
+    <div>
+        {% for post in posts %}
+            <div class="post">
+                <!-- Post Header -->
+                <div class="row-container">
+                    <!-- User Profile -->
+                    <a href="/users/{{ post.owner }}/"><img src="/uploads/{{ post.owner_img_url }}" alt=""
+                         style="width: 30px; height: 30px; margin-top: 15px; margin-left: 15px;"></a>
+                    <a href="/users/{{ post.owner }}/" class="child" style="width: 37.5%;">{{ post.owner }}</a>
+                    <a href="/posts/{{ post.postid }}/" class="child" style="text-align: end; color: grey">{{ post.created }}</a>
+                </div>
+                <!-- Post Body -->
+                <div>
+                    <img src="/uploads/{{ post.filename }}" alt="">
+                    {% if post.likes == 1 %}
+                        <p class="child">1 like</p>
+                    {% else %}
+                        <p class="child">{{ post.likes }} likes</p>
+                    {% endif %}
+                    {% for comment in post.comments %}
+                        <div class="comment">
+                            <a href="/users/{{ comment.owner }}/">{{ comment.owner }}</a> {{ comment.text }}
+                        </div>
+                    {% endfor %}
+                    {% if post.liked == true %}
+                    <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                    <form class="form" action="/likes/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="operation" value="unlike"/>
+                        <input type="hidden" name="postid" value="{{ post.postid }}" />
+                        <input type="submit" name="unlike" value="unlike"/>
+                    </form>
+                    {% else %}
+                    <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                    <form class="form" action="/likes/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="operation" value="like"/>
+                        <input type="hidden" name="postid" value="{{ post.postid }}" />
+                        <input type="submit" name="like" value="like"/>
+                    </form>
+                    {% endif %}
+                    <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                    <form class="form" action="/comments/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                          <input type="hidden" name="operation" value="create"/>
+                        <input type="hidden" name="postid" value="{{ post.postid }}" />
+                        <input type="text" name="text" required/>
+                        <input type="submit" name="comment" value="comment"/>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
 </html>

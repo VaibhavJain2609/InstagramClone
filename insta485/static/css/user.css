@@ -1,0 +1,60 @@
+/* Reset some default styles */
+body, h1, h2, h3, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    color: #333;
+}
+
+.column-container {
+    max-width: 610px;
+    margin: auto;
+}
+
+.row-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: #3897f0; /* Instagram's blue color */
+}
+
+hr {
+    border: 0.5px solid #ccc;
+    margin: 10px 0;
+}
+
+.user-profile {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+}
+
+.user-profile p {
+    margin: 0;
+}
+
+.user-profile a {
+    color: #3897f0;
+}
+
+.user-profile img {
+    max-width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
+
+.form {
+    margin-top: 10px;
+}
+
+/* You may need to customize these styles further based on your design preferences. */
