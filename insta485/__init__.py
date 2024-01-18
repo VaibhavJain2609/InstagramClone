@@ -23,3 +23,6 @@ app.config.from_envvar('INSTA485_SETTINGS', silent=True)
 import insta485.model 
 import insta485.views 
 import insta485.model
+import insta485.views.users
+
+
