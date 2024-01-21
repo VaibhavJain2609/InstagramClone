@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&family=Courgette&display=swap" rel="stylesheet">
+    <title>insta485</title>
+  </head>
+  <body>
+
+    <header>
+      <div>
+        <div class = "headerSection">
+          
+          <p><a href = "/">Insta485 </a></p>
+        </div>
+        <div class = "headerSection2">
+          <p><a href = "/explore/"> explore </a><a href = "/users/{{logname}}/"> | {{logname}} </a></p>
+        </div>
+      </div>
+    </header>
+
+    <h2>Followers</h2>
+    {% for follower in followers %}
+        <div class = "follower_box">
+            <div>
+                <img class = "profilePic" src = "/uploads/{{follower.filename}}" alt = "follower profile pic">
+                <p class = "text"><a href = "/users/{{follower.username}}/">{{follower.username}}</a></p>
+            </div>
+            {% if follower.username == logname %}
+
+            {% elif follower.username in userFollowing %}
+                <p class="text">following</p>
+                <form action="/following/?target=/{{currentPageUser}}/followers/" method="post" enctype="multipart/form-data">
+                  <input type="submit" name="unfollow" value="unfollow"/>
+                  <input type="hidden" name="username" value="{{follower.username}}"/>
+                  <input type="hidden" name="operation" value="unfollow"/>
+                </form>
+            {% else %}
+                <p class="text">not following</p>
+                <form action="/following/?target=/{{currentPageUser}}/followers/" method="post" enctype="multipart/form-data">
+                  <input type="submit" name="follow" value="follow"/>
+                  <input type="hidden" name="username" value="{{follower.username}}"/>
+                  <input type="hidden" name="operation" value="follow"/>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+</body>
+</html>

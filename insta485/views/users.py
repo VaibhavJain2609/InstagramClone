@@ -47,7 +47,6 @@ def show_user(user_url_slug):
 # Following Users
 @insta485.app.route('/users/<user_url_slug>/following/')
 def following_page(user_url_slug):
-    logname = "awdeorio"  # Replace with the logged-in user's username
     connection = model.get_db()
 
     # Check if the user exists in the database
@@ -59,6 +58,7 @@ def following_page(user_url_slug):
 
     if len(cur) == 0:
         flask.abort(404)
+    logname = "awdeorio"  # Replace with the logged-in user's username
 
     # Get the users that the specified user is following
     cur = connection.execute(
@@ -83,30 +83,63 @@ def following_page(user_url_slug):
 @insta485.app.route('/users/<user_url_slug>/followers/')
 def show_followers(user_url_slug):
     logname = 'awdeorio'
-    connection = model.get_db()
-        # Check if the user exists in the database
+        # Connect to database
+    connection = insta485.model.get_db()
+
+        # Query database for people following users user_url_slug
     cur = connection.execute(
-        "SELECT * FROM users "
-        "WHERE username == ?",
-        (user_url_slug,)
-    ).fetchall()
-    if len(cur) == 0:
-        flask.abort(404)
+            "SELECT username1 "
+            "FROM following "
+            "WHERE username2 = ?",
+            (user_url_slug,)
+        )
+    result = cur.fetchall()    
+
+        # get detailed profile of people following user_url_slug
+    followers = []
+    for profile in result:
+        cur = connection.execute(
+                "SELECT username, filename "
+                "FROM users "
+                "WHERE username = ?",
+                (profile["username1"],)
+            )
+        result = cur.fetchall()
+        followers += result
+
+        # Query database for anyone following user
+    userFollowing = []
     cur = connection.execute(
-        "SELECT u.username, u.fullname "
-        "FROM users u "
-        "JOIN following f ON u.username = f.username1 "
-        "WHERE f.username2 = ?",
-        (user_url_slug,)
-    )
-    followers = cur.fetchall()
-    return flask.render_template(
-        "followers.html",
-        logname=logname,
-        user_url_slug=user_url_slug,
-        followers=followers,
-        follows=follows  # Include the 'follows' function in the context
-    )
+            "SELECT username2 "
+            "FROM following "
+            "WHERE username1 = ?",
+            (logname,)
+        )
+    result = cur.fetchall()
+
+    for profile in result:
+        userFollowing += [profile["username2"]]
+
+    context = {"followers":followers,
+                    "userFollowing": userFollowing,
+                    "logname":logname,
+                    "currentPageUser":user_url_slug
+                    }                    
+    return flask.render_template("followers.html", **context)
+    # connection = model.get_db()
+    #     # Check if the user exists in the database
+    # usernameCheck(user_url_slug)
+
+    # followers = connection.execute(
+    #     "SELECT following.username1, users.filename "
+    #     "FROM following "
+    #     "INNER JOIN users "
+    #     "ON following.username1 = users.username "
+    #     "Where following.username2 == ? ",
+    #     ( user_url_slug,)
+    # ).fetchall()
+    # context = {"userFollowers": followers, "logname": logname}
+    # return flask.render_template("followers.html", **context)
 
 def get_following_list(user_url_slug):
     connection = model.get_db()
@@ -138,3 +171,15 @@ def follows(logname, user_url_slug):
     ).fetchone()
 
     return result
+
+def usernameCheck(name):
+    connection = model.get_db()
+    userExists = connection.execute(
+        "SELECT username "
+        "FROM users "
+        "WHERE username == ? ",
+        (name,)
+    ).fetchall()
+    if not userExists:
+        flask.abort(404)
+    return userExists

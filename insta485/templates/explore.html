@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <style>
+
+        .boxed {
+            border: 1px solid black ;
+            width: 600px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top:20px;
+            margin-bottom:20px;
+            }
+        
+    </style>
+</head>
+<body>
+    <p><a href="/">Insta485</a></p>
+
+    <p style="text-align:right;"><a href="/explore/">explore</a></p>
+    <p style="text-align:right;"><a href="/users/{{ logname }}/">{{ logname }}</a></p>
+
+    <h1>Discover people</h1>
+
+    {% for user in not_following %}
+        <div class="boxed">
+            <a href="/users/{{ user.username }}/">
+                <img src="{{ url_for('download_file', filename=user.filename) }}" alt="{{ user.username }}_profile_pic" style="width:42px;height:42px;">
+            </a>
+            <a href="/users/{{ user.username }}/">{{ user.username }}</a>
+            <form action="/following/?target=/explore/" method="post" enctype="multipart/form-data">
+                <input type="submit" name="follow" value="follow"/>
+                <input type="hidden" name="username" value="{{user.username}}"/>
+                <input type="hidden" name="operation" value="follow"/>
+            </form>
+        </div>
+    {% endfor %}
+</body>
+
+</html>
