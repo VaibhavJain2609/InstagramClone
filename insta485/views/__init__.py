@@ -3,3 +3,4 @@ from insta485.views.index import show_index
 from insta485.views.users import show_user
 
 from insta485.views.users import show_followers
+from insta485.views.users import show_following
